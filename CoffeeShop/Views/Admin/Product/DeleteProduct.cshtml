@@ -1,0 +1,18 @@
+﻿@model CoffeShop.Models.Products
+@{
+    ViewBag.Title = "Xóa sản phẩm";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Bạn có chắc chắn muốn xóa sản phẩm này?</h2>
+
+<div>
+    <img src="@Model.ImageUrl" width="80" alt="@Model.Name" />
+    <strong>@Model.Name</strong> - @Model.Price.ToString("C")
+</div>
+
+<form asp-action="DeleteProduct" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+    <a asp-action="Products" class="btn btn-secondary">Hủy</a>
+</form>

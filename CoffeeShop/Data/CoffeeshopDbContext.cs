@@ -1,4 +1,5 @@
-﻿using CoffeShop.Models;
+﻿using CoffeeShop.Models;
+using CoffeShop.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 namespace CoffeeShop.Data
@@ -16,6 +17,11 @@ namespace CoffeeShop.Data
         public DbSet<Models.Order> Orders { get; set; }
 
         public DbSet<Models.OrderDetail> OrderDetails { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+
         // Seed data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

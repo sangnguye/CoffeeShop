@@ -1,6 +1,7 @@
-﻿using CoffeeShop.Models;
+﻿using CoffeeShop.Data;
+using CoffeeShop.Models;
 using CoffeeShop.Models.Interfaces;
-using Microsoft.AspNetCore.Authorization;   
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -10,11 +11,15 @@ namespace CoffeeShop.Controllers
     {
         private IOrderRepository _orderRepository;
         private IShoppingCartRepository _shoppingCartRepository;
+        private CoffeeshopDbContext _context;
 
-        public OrdersController(IOrderRepository orderRepository, IShoppingCartRepository shoppingCartRepository)
+        public OrdersController(IOrderRepository orderRepository, IShoppingCartRepository shoppingCartRepository,
+        CoffeeshopDbContext context
+        )
         {
             this._orderRepository = orderRepository;
             this._shoppingCartRepository = shoppingCartRepository;
+            this._context = context;
         }
 
         public IActionResult Checkout()
@@ -24,7 +29,7 @@ namespace CoffeeShop.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult Checkout(Order order)
+        public async Task<IActionResult> CheckoutAsync(Order order)
         {
             var cartItems = _shoppingCartRepository.GetAllShoppingCartItems();
 
@@ -51,6 +56,18 @@ namespace CoffeeShop.Controllers
 
             _shoppingCartRepository.ClearCart();
             HttpContext.Session.SetInt32("CartCount", 0);
+            // Sau khi lưu đơn hàng
+            _context.Notifications.Add(new Notification
+            {
+                Title = $"Đơn hàng mới #{order.Id}",
+                Url = $"/Admin/Orders/Details/{order.Id}",
+                IsRead = false,
+                CreatedAt = DateTime.Now
+            });
+
+            await _context.SaveChangesAsync();  // Lưu notification sau
+
+
 
             return RedirectToAction("CheckoutComplete");
         }

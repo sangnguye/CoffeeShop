@@ -1,0 +1,84 @@
+﻿@using CoffeeShop.Models
+@model DashboardChartViewModel
+
+@{
+    ViewBag.Title = "Thống kê";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Thống kê</h1>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">Doanh thu theo tháng</div>
+                <div class="card-body">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">Số sản phẩm được đặt theo tháng</div>
+                <div class="card-body">
+                    <canvas id="ordersChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">Top 3 sản phẩm bán chạy</div>
+                <div class="card-body">
+                    <canvas id="topProductsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Area Chart
+        new Chart(document.getElementById("revenueChart"), {
+            type: 'line',
+            data: {
+                labels: [...Array(12).keys()].map(m => `Tháng ${m + 1}`),
+                datasets: [{
+                    label: "Doanh thu",
+                    data: @Html.Raw(Json.Serialize(Model.RevenuePerMonth)),
+                    borderColor: "rgba(78, 115, 223, 1)",
+                    backgroundColor: "rgba(78, 115, 223, 0.05)",
+                    fill: true,
+                    tension: 0.4
+                }]
+            }
+        });
+
+        // Bar Chart
+        new Chart(document.getElementById("ordersChart"), {
+            type: 'bar',
+            data: {
+                labels: [...Array(12).keys()].map(m => `Tháng ${m + 1}`),
+                datasets: [{
+                    label: "Sản phẩm được đặt",
+                    data: @Html.Raw(Json.Serialize(Model.OrdersPerMonth)),
+                    backgroundColor: "#4e73df"
+                }]
+            }
+        });
+
+        // Donut Chart
+        new Chart(document.getElementById("topProductsChart"), {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.TopProducts.Select(p => p.Name))),
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(Model.TopProducts.Select(p => p.Quantity))),
+                    backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc"]
+                }]
+            }
+        });
+    </script>
+}

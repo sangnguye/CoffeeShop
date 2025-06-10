@@ -2,6 +2,7 @@
 using CoffeeShop.Data;
 using CoffeShop.Models;
 using CoffeShop.Models.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace coffeeshop.Models.Services
 {
@@ -15,7 +16,7 @@ namespace coffeeshop.Models.Services
 
         public IEnumerable<Products> GetAllProducts()
         {
-            return dbContext.Products;
+            return dbContext.Products.ToList();
         }
 
         public Products? GetProductDetail(int id)
@@ -26,6 +27,30 @@ namespace coffeeshop.Models.Services
         public IEnumerable<Products> GetTrendingProducts()
         {
             return dbContext.Products.Where(p => p.IsTrendingProduct);
+        }
+
+        public void Add(Products product)
+        {
+            dbContext.Products.Add(product);
+        }
+
+        public void Update(Products product)
+        {
+            dbContext.Products.Update(product);
+        }
+
+        public void Delete(int id)
+        {
+            var product = dbContext.Products.Find(id);
+            if (product != null)
+            {
+                dbContext.Products.Remove(product);
+            }
+        }
+
+        public void Save()
+        {
+            dbContext.SaveChanges();
         }
     }
 }

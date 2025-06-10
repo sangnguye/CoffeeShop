@@ -1,5 +1,6 @@
 ﻿<section data-bs-version="5.1" class="form7 cid-tsJ8wGtENs" id="form7-q">
-
+   
+      
 
     <div class="container">
         <div class="mbr-section-head">
@@ -10,7 +11,43 @@
         </div>
         <div class="row justify-content-center mt-4">
             <div class="col-lg-8 mx-auto mbr-form">
-                <form method="POST" class="mbr-form form-with-styler mx-auto">
+                <form id="contactForm" method="post" asp-controller="Contact" asp-action="AddMessage">
+                    <!-- SweetAlert CDN -->
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                    <script>
+                        document.getElementById("contactForm").addEventListener("submit", async function (e) {
+                            e.preventDefault();
+
+                            const form = e.target;
+                            const formData = new FormData(form);
+
+                            const response = await fetch(form.action, {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                            if (response.ok) {
+                                Swal.fire({
+                                    title: 'Gửi thành công!',
+                                    text: 'Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    form.reset(); // Xóa nội dung form
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Lỗi!',
+                                    text: 'Đã xảy ra lỗi khi gửi phản hồi.',
+                                    icon: 'error',
+                                    confirmButtonText: 'Thử lại'
+                                });
+                            }
+                        });
+                    </script>
+
+
                     <p class="mbr-text mbr-fonts-style align-center mb-4 display-7">
                         One of our team will be in contact with you shortly.
                     </p>
@@ -18,21 +55,23 @@
                     <div class="dragArea row">
                         <div class="col-lg-12 col-md-12 col-sm-12 form-group mb-3" data-for="name">
                             <input type="text" name="name" placeholder="Name" data-form-field="name"
-                                   class="form-control" value="" id="name-form7-q">
+                                   class="form-control" value="" id="name-form7-q" required>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 form-group mb-3" data-for="email">
                             <input type="email" name="email" placeholder="Email" data-form-field="email"
-                                   class="form-control" value="" id="email-form7-q">
+                                   class="form-control" value="" id="email-form7-q" required>
                         </div>
-                        <div data-for="phone" class="col-lg-12 col-md-12 col-sm-12 form-group mb-3">
-                            <textarea type="text" class="form-control" rows="5" placeholder="Message"></textarea>
+                        <div data-for="content" class="col-lg-12 col-md-12 col-sm-12 form-group mb-3">
+                            <textarea name="content" class="form-control" rows="5" placeholder="Message" required></textarea>
                         </div>
                         <div class="col-auto mbr-section-btn align-center">
                             <button type="submit" class="btn btn-primary display-4">Send</button>
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
 </section>
+

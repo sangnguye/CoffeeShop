@@ -9,7 +9,7 @@ namespace CoffeeShop.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<CoffeeshopDbContext>();
 
-            optionsBuilder.UseSqlServer("Server=ASUS_VIVOBOOK;Database=CoffeeShopDBnew;User Id=sa;Password=i990c,b7;Encrypt=False;TrustServerCertificate=True;Pooling=True;");
+            optionsBuilder.UseSqlServer("Server=ASUS_VIVOBOOK;Database=Sang_CoffeeShopDB;User Id=sa;Password=i990c,b7;Encrypt=False;TrustServerCertificate=True;Pooling=True;");
 
             return new CoffeeshopDbContext(optionsBuilder.Options);
         }

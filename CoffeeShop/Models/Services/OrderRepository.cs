@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeShop.Models.Services
 {
-    public class OrderRepository: IOrderRepository
+    public class OrderRepository : IOrderRepository
     {
         private readonly CoffeeshopDbContext _context;
         private IShoppingCartRepository _shoppingCartRepository;
@@ -15,7 +15,7 @@ namespace CoffeeShop.Models.Services
         }
         public void PlaceOrder(Order order)
         {
-           var shoppingCartItems = _shoppingCartRepository.GetAllShoppingCartItems();
+            var shoppingCartItems = _shoppingCartRepository.GetAllShoppingCartItems();
             order.OrderDetails = new List<OrderDetail>();
             foreach (var item in shoppingCartItems)
             {
@@ -39,6 +39,15 @@ namespace CoffeeShop.Models.Services
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Product)
                 .Where(o => o.Email == email)
+                .OrderByDescending(o => o.OrderPlaced)
+                .ToList();
+        }
+
+        public List<Order> GetAllOrders()
+        {
+            return _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
                 .OrderByDescending(o => o.OrderPlaced)
                 .ToList();
         }
